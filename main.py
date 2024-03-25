@@ -20,7 +20,7 @@ wb = load_workbook('test.xlsx')
 ws = wb["Лист1"]
 test = ws['c4']
 week = 0
-for i in range(4, 75):
+for i in range(4, 76):
     if (i == 4):
         print("Понедельник")
     elif (i == 16):
@@ -37,9 +37,9 @@ for i in range(4, 75):
         time = ws['b' + str(i)]
         print(time.value)
     name = ws['c' + str(i)]
-    if (i % 2 == week):
-        if (name.value != None):
-            print(name.value)
-    elif are_cells_merged(ws, 'c' + str(i), 'c' + str(i + 1)):
-        if (name.value != None):
-            print(name.value)
+    if (i % 2 == week and name.value != None):
+        print(name.value)
+    elif (are_cells_merged(ws, 'c' + str(i), 'c' + str(i + 1)) and name.value != None):
+        print(name.value)
+    elif (i % 2 == week):
+        print("-")
