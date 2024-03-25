@@ -15,10 +15,11 @@ def are_cells_merged(worksheet, cell1_coord, cell2_coord):
             return True
     return False
 
+
 wb = load_workbook('test.xlsx')
 ws = wb["Лист1"]
 test = ws['c4']
-week = 1
+week = 0
 for i in range(4, 75):
     if (i == 4):
         print("Понедельник")
@@ -36,9 +37,9 @@ for i in range(4, 75):
         time = ws['b' + str(i)]
         print(time.value)
     name = ws['c' + str(i)]
-    if are_cells_merged(ws, 'c' + str(i), 'c' + str(i+1)):
+    if (i % 2 == week):
         if (name.value != None):
             print(name.value)
-    elif (i % 2 == week):
+    elif are_cells_merged(ws, 'c' + str(i), 'c' + str(i + 1)):
         if (name.value != None):
             print(name.value)
