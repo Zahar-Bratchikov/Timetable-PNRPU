@@ -71,6 +71,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        MainWindow.showEvent = self.resizeEvent
         # Подключаем событие изменения размера окна
         MainWindow.resizeEvent = self.resizeEvent
 
