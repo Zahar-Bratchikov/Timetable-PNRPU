@@ -129,13 +129,13 @@ class Ui_MainWindow(object):
         # Установка высоты строк пропорционально размеру окна
         table_height = self.tableWidget.height()
         row_count = self.tableWidget.rowCount()
-        row_height = int(table_height / row_count * 0.96)
+        row_height = int(table_height / row_count-5)
         for row in range(row_count):
             self.tableWidget.setRowHeight(row, row_height)
 
         table_height = self.tableWidget_2.height()
         row_count = self.tableWidget_2.rowCount()
-        row_height = int(table_height / row_count * 0.96)
+        row_height = int(table_height / row_count-5)
         for row in range(row_count):
             self.tableWidget_2.setRowHeight(row, row_height)
 
