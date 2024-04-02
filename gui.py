@@ -54,6 +54,7 @@ class Ui_MainWindow(object):
         self.gridLayout.addWidget(self.pushButton_4, 0, 1, 1, 1)
         self.lineEdit = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEdit.setObjectName("lineEdit")
+        self.lineEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEdit.setReadOnly(True)  # Делаем строку ввода только для чтения
         self.gridLayout.addWidget(self.lineEdit, 1, 0, 1, 2)
 
