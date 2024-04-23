@@ -1,4 +1,5 @@
 from PyQt5 import QtCore, QtWidgets
+from main import Timetable
 
 
 class Ui_MainWindow(object):
@@ -22,7 +23,6 @@ class Ui_MainWindow(object):
         self.tableWidget.horizontalHeader().setStretchLastSection(True)
         self.tableWidget.setSizePolicy(QtWidgets.QSizePolicy.Expanding,
                                        QtWidgets.QSizePolicy.Expanding)  # Политика изменения размеров
-
 
         self.gridLayout.addWidget(self.tableWidget, 2, 0, 1, 2)
 
@@ -73,40 +73,49 @@ class Ui_MainWindow(object):
         self.lineEdit.setText(_translate("MainWindow", "День Недели"))
 
         # заполнение таблиц
-        self.fill_table_data()
+        self.fill_table_data(timetable)
 
-    def fill_table_data(self):
+    def fill_table_data(self, timetable):
         # Данные для таблиц
+        timetable_arr = timetable.get_timetable()[0]
         data_week_1 = {
-            "8:00": "Данные 1\nДанные 2\nДанные 3",
-            "9:40": "Данные 4\nДанные 5\nДанные 6",
-            "11:30": "Данные 7\nДанные 8\nДанные 9",
-            "13:20": "Данные 10\nДанные 11\nДанные 12",
-            "15:00": "Данные 13\nДанные 14\nДанные 15",
-            "16:40": "Данные 16\nДанные 17\nДанные 18"
+            "8:00": timetable_arr[0],
+            "9:40": timetable_arr[1],
+            "11:30": timetable_arr[2],
+            "13:20": timetable_arr[3],
+            "15:00": timetable_arr[4],
+            "16:40": timetable_arr[5]
         }
 
         # Заполнение таблицы 1
-        self.tableWidget.setHorizontalHeaderLabels(["Первая неделя"])
-        self.tableWidget.setVerticalHeaderLabels(["8:00", "9:40", "11:30", "13:20", "15:00", "16:40"])
-        for row, (time, data) in enumerate(data_week_1.items()):
-            text_edit = QtWidgets.QTextEdit()
-            text_edit.setPlainText(data)
-            self.tableWidget.setCellWidget(row, 0, text_edit)
+        if timetable.get_timetable()[1] == 0:
+            self.tableWidget.setHorizontalHeaderLabels(["Первая неделя"])
+        else:
+            self.tableWidget.setHorizontalHeaderLabels(["Вторая неделя"])
 
+        self.tableWidget.setVerticalHeaderLabels(["8:00", "9:40", "11:30", "13:20", "15:00", "16:40"])
+
+        # Установка таблицы только для чтения
+        self.tableWidget.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+
+        for row, (time, data) in enumerate(data_week_1.items()):
+            text_item = QtWidgets.QTableWidgetItem(data)
+            text_item.setTextAlignment(QtCore.Qt.AlignCenter)  # Выравнивание текста по центру
+            self.tableWidget.setItem(row, 0, text_item)
 
     # Обработчик события изменения размера окна
     def resizeEvent(self, event):
         # Установка высоты строк пропорционально размеру окна
         table_height = self.tableWidget.height()
         row_count = self.tableWidget.rowCount()
-        row_height = int(table_height / row_count-5)
+        row_height = int(table_height / row_count - 5)
         for row in range(row_count):
             self.tableWidget.setRowHeight(row, row_height)
 
 
 import sys
 
+timetable = Timetable('test.xlsx', 'Лист1')
 app = QtWidgets.QApplication(sys.argv)
 MainWindow = QtWidgets.QMainWindow()
 ui = Ui_MainWindow()
