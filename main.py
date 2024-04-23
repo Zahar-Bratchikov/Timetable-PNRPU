@@ -53,11 +53,6 @@ class Timetable:
             elif (self.are_cells_merged('c' + str(i), 'c' + str(i + 1)) and name.value is not None):
                 tt_arr.append(name.value)
             elif i % 2 == week:
-                tt_arr.append("-")
+                tt_arr.append("---")
 
-        return tt_arr
-
-
-# Использование класса
-timetable = Timetable('test.xlsx', 'Лист1')
-print(timetable.get_timetable())
+        return tt_arr, week
