@@ -1,5 +1,6 @@
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QCalendarWidget
+from PyQt5.QtCore import QTimer
 
 
 class Ui_MainWindow(object):
@@ -70,7 +71,7 @@ class Ui_MainWindow(object):
 
         self.pushButton.clicked.connect(self.next_day)
         self.pushButton_2.clicked.connect(self.previous_day)
-        self.calendar = 0
+        self.calendar = False
         self.pushButton_4.clicked.connect(self.show_calendar)
 
 
@@ -150,8 +151,6 @@ class Ui_MainWindow(object):
             self.tableWidget.setItem(row, 0, text_item)
 
     def show_calendar(self):
-        self.calendar = (self.calendar + 1) % 2
-        if self.calendar == 1:
-            self.calendarWidget.show()
-        else:
-            self.calendarWidget.hide()
+        self.calendar = not self.calendar
+        self.calendarWidget.setVisible(self.calendar)
+        QTimer.singleShot(0, lambda: self.resizeEvent(None))
