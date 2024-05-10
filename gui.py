@@ -74,7 +74,6 @@ class Ui_MainWindow(object):
         self.calendar = False
         self.pushButton_4.clicked.connect(self.show_calendar)
 
-
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -85,8 +84,8 @@ class Ui_MainWindow(object):
         self.lineEdit.setText(_translate("MainWindow", ""))
 
     def fill_table_data(self, timetable):
-        self.current_day = timetable.get_timetable()[2]
-        self.current_week = (timetable.get_timetable()[1] + 1) % 2
+        self.current_day = timetable.get_timetable()[1]
+        self.current_week = self.current_day // 6
         if self.current_week == 0:
             self.tableWidget.setHorizontalHeaderLabels(["Первая неделя"])
         else:
@@ -136,6 +135,7 @@ class Ui_MainWindow(object):
     def update_day_label(self):
         days_of_week = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"]
         self.lineEdit.setText(days_of_week[self.current_day % 6])
+        print(self.current_day)
         data_week_1 = {
             "8:00": self.timetable_arr[0 + self.current_day * 6],
             "9:40": self.timetable_arr[1 + self.current_day * 6],
