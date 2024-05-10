@@ -1,5 +1,5 @@
 from PyQt5 import QtCore, QtWidgets
-from main import Timetable
+from PyQt5.QtWidgets import QCalendarWidget
 
 
 class Ui_MainWindow(object):
@@ -44,6 +44,11 @@ class Ui_MainWindow(object):
         self.lineEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEdit.setReadOnly(True)  # Делаем строку ввода только для чтения
         self.gridLayout.addWidget(self.lineEdit, 1, 0, 1, 2)
+        self.calendarWidget = QCalendarWidget(self.centralwidget)
+        self.calendarWidget.setObjectName("calendarWidget")
+        self.calendarWidget.hide()  # Скрываем календарь при инициализации
+
+        self.gridLayout.addWidget(self.calendarWidget, 4, 0, 1, 2)
 
         MainWindow.setCentralWidget(self.centralwidget)
 
@@ -63,45 +68,38 @@ class Ui_MainWindow(object):
         # Подключаем событие изменения размера окна
         MainWindow.resizeEvent = self.resizeEvent
 
+        self.pushButton.clicked.connect(self.next_day)
+        self.pushButton_2.clicked.connect(self.previous_day)
+        self.calendar = 0
+        self.pushButton_4.clicked.connect(self.show_calendar)
+
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.pushButton.setText(_translate("MainWindow", "След. день"))
-        self.pushButton_2.setText(_translate("MainWindow", "Пред. день"))
-        self.pushButton_3.setText(_translate("MainWindow", "Выбрать Группу"))
-        self.pushButton_4.setText(_translate("MainWindow", "Выбрать День"))
-        self.lineEdit.setText(_translate("MainWindow", "День Недели"))
-
-        # заполнение таблиц
-        self.fill_table_data(timetable)
+        self.pushButton.setText(_translate("MainWindow", "Следующий день"))
+        self.pushButton_2.setText(_translate("MainWindow", "Предыдущий день"))
+        self.pushButton_3.setText(_translate("MainWindow", "Выбрать группу"))
+        self.pushButton_4.setText(_translate("MainWindow", "Выбрать день"))
+        self.lineEdit.setText(_translate("MainWindow", ""))
 
     def fill_table_data(self, timetable):
-        # Данные для таблиц
-        timetable_arr = timetable.get_timetable()[0]
-        data_week_1 = {
-            "8:00": timetable_arr[0],
-            "9:40": timetable_arr[1],
-            "11:30": timetable_arr[2],
-            "13:20": timetable_arr[3],
-            "15:00": timetable_arr[4],
-            "16:40": timetable_arr[5]
-        }
-
-        # Заполнение таблицы 1
-        if timetable.get_timetable()[1] == 0:
+        self.current_day = timetable.get_timetable()[2]
+        self.current_week = (timetable.get_timetable()[1] + 1) % 2
+        if self.current_week == 0:
             self.tableWidget.setHorizontalHeaderLabels(["Первая неделя"])
         else:
             self.tableWidget.setHorizontalHeaderLabels(["Вторая неделя"])
+        # Данные для таблиц
+        self.timetable_arr = timetable.get_timetable()[0]
 
+        # Заполнение таблицы 1
         self.tableWidget.setVerticalHeaderLabels(["8:00", "9:40", "11:30", "13:20", "15:00", "16:40"])
 
         # Установка таблицы только для чтения
         self.tableWidget.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
 
-        for row, (time, data) in enumerate(data_week_1.items()):
-            text_item = QtWidgets.QTableWidgetItem(data)
-            text_item.setTextAlignment(QtCore.Qt.AlignCenter)  # Выравнивание текста по центру
-            self.tableWidget.setItem(row, 0, text_item)
+        self.update_day_label()
 
     # Обработчик события изменения размера окна
     def resizeEvent(self, event):
@@ -112,13 +110,48 @@ class Ui_MainWindow(object):
         for row in range(row_count):
             self.tableWidget.setRowHeight(row, row_height)
 
+    def next_day(self):
+        self.current_day = (self.current_day + 1) % 12
+        self.update_day_label()
+        if self.current_day % 6 == 0:
+            self.current_week = (self.current_week + 1) % 2
+            if self.current_week == 0:
+                self.tableWidget.setHorizontalHeaderLabels(["Первая неделя"])
+            else:
+                self.tableWidget.setHorizontalHeaderLabels(["Вторая неделя"])
 
-import sys
+    def previous_day(self):
+        self.current_day = (self.current_day - 1) % 12
+        if self.current_day == -1:
+            self.current_day = 11
+        self.update_day_label()
+        if self.current_day % 6 == 5:
+            self.current_week = (self.current_week + 1) % 2
+            if self.current_week == 0:
+                self.tableWidget.setHorizontalHeaderLabels(["Первая неделя"])
+            else:
+                self.tableWidget.setHorizontalHeaderLabels(["Вторая неделя"])
 
-timetable = Timetable('test.xlsx', 'Лист1')
-app = QtWidgets.QApplication(sys.argv)
-MainWindow = QtWidgets.QMainWindow()
-ui = Ui_MainWindow()
-ui.setupUi(MainWindow)
-MainWindow.show()
-sys.exit(app.exec_())
+    def update_day_label(self):
+        days_of_week = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"]
+        self.lineEdit.setText(days_of_week[self.current_day % 6])
+        data_week_1 = {
+            "8:00": self.timetable_arr[0 + self.current_day * 6],
+            "9:40": self.timetable_arr[1 + self.current_day * 6],
+            "11:30": self.timetable_arr[2 + self.current_day * 6],
+            "13:20": self.timetable_arr[3 + self.current_day * 6],
+            "15:00": self.timetable_arr[4 + self.current_day * 6],
+            "16:40": self.timetable_arr[5 + self.current_day * 6]
+        }
+
+        for row, (time, data) in enumerate(data_week_1.items()):
+            text_item = QtWidgets.QTableWidgetItem(data)
+            text_item.setTextAlignment(QtCore.Qt.AlignCenter)  # Выравнивание текста по центру
+            self.tableWidget.setItem(row, 0, text_item)
+
+    def show_calendar(self):
+        self.calendar = (self.calendar + 1) % 2
+        if self.calendar == 1:
+            self.calendarWidget.show()
+        else:
+            self.calendarWidget.hide()
