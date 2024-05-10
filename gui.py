@@ -135,7 +135,6 @@ class Ui_MainWindow(object):
     def update_day_label(self):
         days_of_week = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"]
         self.lineEdit.setText(days_of_week[self.current_day % 6])
-        print(self.current_day)
         data_week_1 = {
             "8:00": self.timetable_arr[0 + self.current_day * 6],
             "9:40": self.timetable_arr[1 + self.current_day * 6],
