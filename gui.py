@@ -85,7 +85,7 @@ class Ui_MainWindow(object):
 
     def fill_table_data(self, timetable):
         self.current_day = timetable.get_timetable()[1]
-        self.current_week = self.current_day // 6
+        self.current_week = self.current_day // 7
         if self.current_week == 0:
             self.tableWidget.setHorizontalHeaderLabels(["Первая неделя"])
         else:
@@ -111,9 +111,9 @@ class Ui_MainWindow(object):
             self.tableWidget.setRowHeight(row, row_height)
 
     def next_day(self):
-        self.current_day = (self.current_day + 1) % 12
+        self.current_day = (self.current_day + 1) % 14
         self.update_day_label()
-        if self.current_day % 6 == 0:
+        if self.current_day % 7 == 0:
             self.current_week = (self.current_week + 1) % 2
             if self.current_week == 0:
                 self.tableWidget.setHorizontalHeaderLabels(["Первая неделя"])
@@ -121,11 +121,11 @@ class Ui_MainWindow(object):
                 self.tableWidget.setHorizontalHeaderLabels(["Вторая неделя"])
 
     def previous_day(self):
-        self.current_day = (self.current_day - 1) % 12
+        self.current_day = self.current_day - 1
         if self.current_day == -1:
-            self.current_day = 11
+            self.current_day = 13
         self.update_day_label()
-        if self.current_day % 6 == 5:
+        if self.current_day % 7 == 6:
             self.current_week = (self.current_week + 1) % 2
             if self.current_week == 0:
                 self.tableWidget.setHorizontalHeaderLabels(["Первая неделя"])
@@ -133,8 +133,8 @@ class Ui_MainWindow(object):
                 self.tableWidget.setHorizontalHeaderLabels(["Вторая неделя"])
 
     def update_day_label(self):
-        days_of_week = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"]
-        self.lineEdit.setText(days_of_week[self.current_day % 6])
+        days_of_week = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"]
+        self.lineEdit.setText(days_of_week[self.current_day % 7])
         data_week_1 = {
             "8:00": self.timetable_arr[0 + self.current_day * 6],
             "9:40": self.timetable_arr[1 + self.current_day * 6],
