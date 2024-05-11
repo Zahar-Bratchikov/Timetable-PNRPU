@@ -47,14 +47,17 @@ class Timetable:
         for k in range(0, 2):
             week = k
             for i in range(4, 76):
+                if (self.are_cells_merged('c' + str(i - 1), 'c' + str(i)) and name.value is not None):
+                    continue
                 name = self.ws['c' + str(i)]
                 if (i % 2 == week and name.value is not None):
                     tt_arr.append(name.value)
                 elif (self.are_cells_merged('c' + str(i), 'c' + str(i + 1)) and name.value is not None):
                     tt_arr.append(name.value)
-                elif (self.are_cells_merged('c' + str(i - 1), 'c' + str(i)) and name.value is not None):
-                    continue
-                elif (i % 2 == week and i != 33):
+                elif (i % 2 == week):
                     tt_arr.append("---")
+            for i in range(0, 6):
+                tt_arr.append("---")
 
-        return tt_arr, (now.weekday() + ((self.weeks_since(start_date, current_week) + 1) % 2) * 6) % 12
+
+        return tt_arr, now.weekday() + ((self.weeks_since(start_date, current_week) + 1) % 2) * 7
