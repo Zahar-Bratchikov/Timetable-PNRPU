@@ -1,6 +1,7 @@
 from openpyxl.utils import range_boundaries
 from openpyxl import load_workbook
 from datetime import datetime
+from PyQt5 import QtCore, QtWidgets
 
 
 class Timetable:
@@ -61,3 +62,38 @@ class Timetable:
 
 
         return tt_arr, now.weekday() + ((self.weeks_since(start_date, current_week) + 1) % 2) * 7
+
+    def fill_table_data(self, timetable):
+        self.current_day = timetable.get_timetable()[2]  # Изменил индекс для получения текущего дня
+        self.current_week = timetable.get_timetable()[1]  # Изменил индекс для получения текущей недели
+
+        if self.current_week == 0:
+            self.tableWidget.setHorizontalHeaderLabels(["Первая неделя"])
+        else:
+            self.tableWidget.setHorizontalHeaderLabels(["Вторая неделя"])
+
+        # Получаем данные из расписания
+        self.timetable_arr, week, current_day = timetable.get_timetable()
+
+        # Заполняем вертикальные заголовки
+        self.tableWidget.setVerticalHeaderLabels(["8:00", "9:40", "11:30", "13:20", "15:00", "16:40"])
+
+        # Обновляем таблицу данными расписания
+        for row in range(6):
+            for col in range(1):  # Изменил на range(1)
+                index = row + col * 6
+                text = self.timetable_arr[index]
+                item = QtWidgets.QTableWidgetItem(text)
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                self.tableWidget.setItem(row, col, item)
+
+        # Обновляем метку дня
+        days_of_week = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"]
+        self.lineEdit.setText(days_of_week[current_day])
+
+        # Изменяем высоту строк таблицы
+        table_height = self.tableWidget.height()
+        row_count = self.tableWidget.rowCount()
+        row_height = int(table_height / row_count - 5)
+        for row in range(row_count):
+            self.tableWidget.setRowHeight(row, row_height)
