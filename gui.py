@@ -1,5 +1,6 @@
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QCalendarWidget, QComboBox, QDialog, QLineEdit, QPushButton
+from PyQt5.QtCore import QCoreApplication, QRect
 from timetable import Timetable
 import requests
 import os
@@ -43,6 +44,7 @@ class MainWindow(QtWidgets.QMainWindow):
         super(MainWindow, self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        self.setWindowTitle("Расписание ПНИПУ")
 
         self.timetable = Timetable('timetable.xlsx', 'Лист1')
         self.ui.fill_table_data(self.timetable)
@@ -53,8 +55,15 @@ class Ui_MainWindow(object):
         self.current_day = 0
 
     def setupUi(self, MainWindow):
+        screen_resolution = QCoreApplication.instance().desktop().screenGeometry()
+        screen_width = screen_resolution.width()
+        screen_height = screen_resolution.height()
+
+        # Устанавливаем размер окна в 2/3 от разрешения монитора
+        window_width = int(screen_resolution.width() * 2 / 3)
+        window_height = int(screen_resolution.height() * 2 / 3)
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1280, 720)
+        MainWindow.resize(window_width, window_height)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
 
