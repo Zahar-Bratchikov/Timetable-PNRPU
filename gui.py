@@ -85,36 +85,34 @@ class Ui_MainWindow(object):
         self.tableWidget.setSizePolicy(QtWidgets.QSizePolicy.Expanding,
                                        QtWidgets.QSizePolicy.Expanding)  # Политика изменения размеров
 
-        self.gridLayout.addWidget(self.tableWidget, 3, 0, 1, 2)
+        self.gridLayout.addWidget(self.tableWidget, 2, 0, 1, 2)
 
         # Кнопки и строка ввода
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton.setObjectName("pushButton")
-        self.gridLayout.addWidget(self.pushButton, 4, 1, 1, 1)
+        self.gridLayout.addWidget(self.pushButton, 3, 1, 1, 1)
         self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_2.setObjectName("pushButton_2")
-        self.gridLayout.addWidget(self.pushButton_2, 4, 0, 1, 1)
+        self.gridLayout.addWidget(self.pushButton_2, 3, 0, 1, 1)
         self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_3.setObjectName("pushButton_3")
         self.gridLayout.addWidget(self.pushButton_3, 0, 0, 1, 1)
         self.pushButton_4 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_4.setObjectName("pushButton_4")
         self.gridLayout.addWidget(self.pushButton_4, 0, 1, 1, 1)
-        self.lineEdit = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit.setObjectName("lineEdit")
-        self.lineEdit.setAlignment(QtCore.Qt.AlignCenter)
-        self.lineEdit.setReadOnly(True)  # Делаем строку ввода только для чтения
-        self.gridLayout.addWidget(self.lineEdit, 2, 0, 1, 2)
         self.lineEdit_2 = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit_2.setObjectName("lineEdit")
+        self.lineEdit_2.setObjectName("lineEdit_2")
         self.lineEdit_2.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEdit_2.setReadOnly(True)  # Делаем строку ввода только для чтения
         self.gridLayout.addWidget(self.lineEdit_2, 1, 0, 1, 1)
         self.lineEdit_3 = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit_3.setObjectName("lineEdit")
+        self.lineEdit_3.setObjectName("lineEdit_3")
         self.lineEdit_3.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEdit_3.setReadOnly(True)  # Делаем строку ввода только для чтения
         self.gridLayout.addWidget(self.lineEdit_3, 1, 1, 1, 1)
+        self.pushButton_5 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_5.setObjectName("pushButton_3")
+        self.gridLayout.addWidget(self.pushButton_5, 4, 0, 1, 2)
         self.calendarWidget = QCalendarWidget(self.centralwidget)
         self.calendarWidget.setObjectName("calendarWidget")
         self.calendarWidget.hide()  # Скрываем календарь при инициализации
@@ -142,6 +140,7 @@ class Ui_MainWindow(object):
 
         self.pushButton.clicked.connect(self.next_day)
         self.pushButton_2.clicked.connect(self.previous_day)
+        self.pushButton_5.clicked.connect(self.curr_day)
         self.calendar = False
         self.pushButton_4.clicked.connect(self.show_calendar)
         self.pushButton_3.clicked.connect(self.show_group_dialog)
@@ -154,10 +153,11 @@ class Ui_MainWindow(object):
         self.pushButton_2.setText(_translate("MainWindow", "Предыдущий день"))
         self.pushButton_3.setText(_translate("MainWindow", "Выбрать группу"))
         self.pushButton_4.setText(_translate("MainWindow", "Показать календарь"))
-
+        self.pushButton_5.setText(_translate("MainWindow", "Текущий день"))
     def fill_table_data(self, timetable):
         self.current_day = timetable.get_timetable()[1]
         self.current_week = self.current_day // 7
+        self.curr_day_const, self.curr_week_const = self.current_day, self.current_week
         self.lineEdit_2.setText(timetable.get_timetable()[2].replace(" ", ""))
         self.lineEdit_3.setText(timetable.get_timetable()[3])
         if self.current_week == 0:
@@ -196,9 +196,13 @@ class Ui_MainWindow(object):
         self.update_day_label()
         self.current_date = self.current_date.addDays(-1)
 
+    def curr_day(self):
+        self.current_day, self.current_week = self.curr_day_const, self.curr_week_const
+        self.current_date = QtCore.QDate.currentDate()
+        self.update_day_label()
+
     def update_day_label(self):
         days_of_week = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"]
-        self.lineEdit.setText(days_of_week[self.current_day % 7])
         data_week_1 = {
             "8:00": self.timetable_arr[0 + self.current_day * 6],
             "9:40": self.timetable_arr[1 + self.current_day * 6],
@@ -211,10 +215,7 @@ class Ui_MainWindow(object):
             self.current_week = 1
         else:
             self.current_week = 0
-        if self.current_week == 0:
-            self.tableWidget.setHorizontalHeaderLabels(["Первая неделя"])
-        else:
-            self.tableWidget.setHorizontalHeaderLabels(["Вторая неделя"])
+        self.tableWidget.setHorizontalHeaderLabels([days_of_week[self.current_day % 7] + " | Неделя " + str(self.current_week + 1)])
 
         for row, (time, data) in enumerate(data_week_1.items()):
             text_item = QtWidgets.QTableWidgetItem(data)
