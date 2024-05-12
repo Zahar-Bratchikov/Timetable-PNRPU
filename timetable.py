@@ -61,7 +61,7 @@ class Timetable:
                 tt_arr.append("---")
 
 
-        return tt_arr, now.weekday() + ((self.weeks_since(start_date, current_week) + 1) % 2) * 7
+        return tt_arr, now.weekday() + ((self.weeks_since(start_date, current_week) + 1) % 2) * 7, self.ws['c3'].value, self.ws['a1'].value
 
     def fill_table_data(self, timetable):
         self.current_day = timetable.get_timetable()[2]  # Изменил индекс для получения текущего дня
