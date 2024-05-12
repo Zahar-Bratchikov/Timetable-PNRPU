@@ -106,6 +106,7 @@ class Ui_MainWindow(object):
         self.calendarWidget = QCalendarWidget(self.centralwidget)
         self.calendarWidget.setObjectName("calendarWidget")
         self.calendarWidget.hide()  # Скрываем календарь при инициализации
+        self.calendarWidget.selectionChanged.connect(self.on_date_selected)
 
         self.gridLayout.addWidget(self.calendarWidget, 4, 0, 1, 2)
 
@@ -132,6 +133,7 @@ class Ui_MainWindow(object):
         self.calendar = False
         self.pushButton_4.clicked.connect(self.show_calendar)
         self.pushButton_3.clicked.connect(self.show_group_dialog)
+        self.current_date = QtCore.QDate.currentDate()
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -172,24 +174,13 @@ class Ui_MainWindow(object):
     def next_day(self):
         self.current_day = (self.current_day + 1) % 14
         self.update_day_label()
-        if self.current_day % 7 == 0:
-            self.current_week = (self.current_week + 1) % 2
-            if self.current_week == 0:
-                self.tableWidget.setHorizontalHeaderLabels(["Первая неделя"])
-            else:
-                self.tableWidget.setHorizontalHeaderLabels(["Вторая неделя"])
 
     def previous_day(self):
         self.current_day = self.current_day - 1
         if self.current_day == -1:
             self.current_day = 13
         self.update_day_label()
-        if self.current_day % 7 == 6:
-            self.current_week = (self.current_week + 1) % 2
-            if self.current_week == 0:
-                self.tableWidget.setHorizontalHeaderLabels(["Первая неделя"])
-            else:
-                self.tableWidget.setHorizontalHeaderLabels(["Вторая неделя"])
+
 
     def update_day_label(self):
         days_of_week = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"]
@@ -202,6 +193,14 @@ class Ui_MainWindow(object):
             "15:00": self.timetable_arr[4 + self.current_day * 6],
             "16:40": self.timetable_arr[5 + self.current_day * 6]
         }
+        if self.current_day > 6:
+            self.current_week = 1
+        else:
+            self.current_week = 0
+        if self.current_week == 0:
+            self.tableWidget.setHorizontalHeaderLabels(["Первая неделя"])
+        else:
+            self.tableWidget.setHorizontalHeaderLabels(["Вторая неделя"])
 
         for row, (time, data) in enumerate(data_week_1.items()):
             text_item = QtWidgets.QTableWidgetItem(data)
@@ -228,12 +227,20 @@ class Ui_MainWindow(object):
                     timetable = Timetable(filename, 'Лист1')
                     self.fill_table_data(timetable)
 
+    def on_date_selected(self):
+        selected_date = self.calendarWidget.selectedDate()
+        self.current_day = (self.current_day + self.current_date.daysTo(selected_date))%14
+        self.current_date = selected_date
+        print(self.current_day)
+        self.update_day_label()
+
 
 def download_excel_schedule(Group, Year, Number_of_group, Level_education, Season, time):
     # Сформировать URL на основе предоставленных параметров
     base_url = "https://pstu.ru/files/file/Abitur/timetable/"
     url = f"{base_url}2023-2024%20Raspisanie%20zanyatijj%20FPMM%20{Group}%20-{Year}-{Number_of_group}{Level_education}%20%28{Season}%20%20{time}%20smeny%29.xlsx"
-
+    url2 = f"{base_url}2023-2024%20Raspisanie%20zanyatijj%20FPMM%20{Group}%20%20-{Year}-{Number_of_group}{Level_education}%20%28{Season}%20%20{time}%20smeny%29.xlsx"
+    url3 = f"{base_url}2023-2024%20Raspisanie%20zanyatijj%20FPMM%20{Group}-{Year}-{Number_of_group}{Level_education}%20%28{Season}%20%20{time}%20smeny%29.xlsx"
     # Отправить GET-запрос для загрузки файла
     response = requests.get(url)
 
@@ -247,8 +254,31 @@ def download_excel_schedule(Group, Year, Number_of_group, Level_education, Seaso
             f.write(response.content)
         return filepath
     else:
-        QMessageBox.critical(None, "Ошибка", "Не удалось загрузить файл.", QMessageBox.Ok)
-        return None
+        response = requests.get(url2)
+        if response.status_code == 200:
+            # Определить путь для сохранения файла
+            filename = f"timetable.xlsx"
+            filepath = os.path.join(os.getcwd(), filename)
+
+            # Записать содержимое файла
+            with open(filepath, "wb") as f:
+                f.write(response.content)
+            return filepath
+        else:
+            response = requests.get(url3)
+            if response.status_code == 200:
+                # Определить путь для сохранения файла
+                filename = f"timetable.xlsx"
+                filepath = os.path.join(os.getcwd(), filename)
+
+                # Записать содержимое файла
+                with open(filepath, "wb") as f:
+                    f.write(response.content)
+                return filepath
+            else:
+                QMessageBox.critical(None, "Ошибка", "Не удалось загрузить файл.", QMessageBox.Ok)
+                return None
+
 
 class GroupSelectionDialog(QDialog):
     def __init__(self, parent=None):
