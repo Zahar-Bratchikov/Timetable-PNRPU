@@ -83,15 +83,15 @@ class Ui_MainWindow(object):
         self.tableWidget.setSizePolicy(QtWidgets.QSizePolicy.Expanding,
                                        QtWidgets.QSizePolicy.Expanding)  # Политика изменения размеров
 
-        self.gridLayout.addWidget(self.tableWidget, 2, 0, 1, 2)
+        self.gridLayout.addWidget(self.tableWidget, 3, 0, 1, 2)
 
         # Кнопки и строка ввода
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton.setObjectName("pushButton")
-        self.gridLayout.addWidget(self.pushButton, 3, 1, 1, 1)
+        self.gridLayout.addWidget(self.pushButton, 4, 1, 1, 1)
         self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_2.setObjectName("pushButton_2")
-        self.gridLayout.addWidget(self.pushButton_2, 3, 0, 1, 1)
+        self.gridLayout.addWidget(self.pushButton_2, 4, 0, 1, 1)
         self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_3.setObjectName("pushButton_3")
         self.gridLayout.addWidget(self.pushButton_3, 0, 0, 1, 1)
@@ -102,13 +102,23 @@ class Ui_MainWindow(object):
         self.lineEdit.setObjectName("lineEdit")
         self.lineEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEdit.setReadOnly(True)  # Делаем строку ввода только для чтения
-        self.gridLayout.addWidget(self.lineEdit, 1, 0, 1, 2)
+        self.gridLayout.addWidget(self.lineEdit, 2, 0, 1, 2)
+        self.lineEdit_2 = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineEdit_2.setObjectName("lineEdit")
+        self.lineEdit_2.setAlignment(QtCore.Qt.AlignCenter)
+        self.lineEdit_2.setReadOnly(True)  # Делаем строку ввода только для чтения
+        self.gridLayout.addWidget(self.lineEdit_2, 1, 0, 1, 1)
+        self.lineEdit_3 = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineEdit_3.setObjectName("lineEdit")
+        self.lineEdit_3.setAlignment(QtCore.Qt.AlignCenter)
+        self.lineEdit_3.setReadOnly(True)  # Делаем строку ввода только для чтения
+        self.gridLayout.addWidget(self.lineEdit_3, 1, 1, 1, 1)
         self.calendarWidget = QCalendarWidget(self.centralwidget)
         self.calendarWidget.setObjectName("calendarWidget")
         self.calendarWidget.hide()  # Скрываем календарь при инициализации
         self.calendarWidget.selectionChanged.connect(self.on_date_selected)
 
-        self.gridLayout.addWidget(self.calendarWidget, 4, 0, 1, 2)
+        self.gridLayout.addWidget(self.calendarWidget, 5, 0, 1, 2)
 
         MainWindow.setCentralWidget(self.centralwidget)
 
@@ -142,11 +152,12 @@ class Ui_MainWindow(object):
         self.pushButton_2.setText(_translate("MainWindow", "Предыдущий день"))
         self.pushButton_3.setText(_translate("MainWindow", "Выбрать группу"))
         self.pushButton_4.setText(_translate("MainWindow", "Показать календарь"))
-        self.lineEdit.setText(_translate("MainWindow", ""))
 
     def fill_table_data(self, timetable):
         self.current_day = timetable.get_timetable()[1]
         self.current_week = self.current_day // 7
+        self.lineEdit_2.setText(timetable.get_timetable()[2].replace(" ", ""))
+        self.lineEdit_3.setText(timetable.get_timetable()[3])
         if self.current_week == 0:
             self.tableWidget.setHorizontalHeaderLabels(["Первая неделя"])
         else:
@@ -174,12 +185,14 @@ class Ui_MainWindow(object):
     def next_day(self):
         self.current_day = (self.current_day + 1) % 14
         self.update_day_label()
+        self.current_date = self.current_date.addDays(1)
 
     def previous_day(self):
         self.current_day = self.current_day - 1
         if self.current_day == -1:
             self.current_day = 13
         self.update_day_label()
+        self.current_date = self.current_date.addDays(-1)
 
 
     def update_day_label(self):
@@ -226,12 +239,12 @@ class Ui_MainWindow(object):
                 if filename:
                     timetable = Timetable(filename, 'Лист1')
                     self.fill_table_data(timetable)
+                    self.current_date = QtCore.QDate.currentDate()
 
     def on_date_selected(self):
         selected_date = self.calendarWidget.selectedDate()
         self.current_day = (self.current_day + self.current_date.daysTo(selected_date))%14
         self.current_date = selected_date
-        print(self.current_day)
         self.update_day_label()
 
 
