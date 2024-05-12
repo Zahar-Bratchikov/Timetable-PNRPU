@@ -1,4 +1,5 @@
 from PyQt5 import QtWidgets, QtCore
+from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtWidgets import QCalendarWidget, QComboBox, QDialog, QLineEdit, QPushButton
 from PyQt5.QtCore import QCoreApplication, QRect
 from timetable import Timetable
@@ -244,11 +245,9 @@ def download_excel_schedule(Group, Year, Number_of_group, Level_education, Seaso
         # Записать содержимое файла
         with open(filepath, "wb") as f:
             f.write(response.content)
-
-        print(f"Файл {filename} успешно загружен.")
         return filepath
     else:
-        print("Не удалось загрузить файл.")
+        QMessageBox.critical(None, "Ошибка", "Не удалось загрузить файл.", QMessageBox.Ok)
         return None
 
 class GroupSelectionDialog(QDialog):
