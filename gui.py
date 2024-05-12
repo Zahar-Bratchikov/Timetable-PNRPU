@@ -138,7 +138,7 @@ class Ui_MainWindow(object):
         self.pushButton.setText(_translate("MainWindow", "Следующий день"))
         self.pushButton_2.setText(_translate("MainWindow", "Предыдущий день"))
         self.pushButton_3.setText(_translate("MainWindow", "Выбрать группу"))
-        self.pushButton_4.setText(_translate("MainWindow", "Выбрать день"))
+        self.pushButton_4.setText(_translate("MainWindow", "Показать календарь"))
         self.lineEdit.setText(_translate("MainWindow", ""))
 
     def fill_table_data(self, timetable):
@@ -211,6 +211,10 @@ class Ui_MainWindow(object):
         self.calendar = not self.calendar
         self.calendarWidget.setVisible(self.calendar)
         QtCore.QTimer.singleShot(0, lambda: self.resizeEvent(None))
+        if self.calendar:
+            self.pushButton_4.setText("Скрыть календарь")
+        else:
+            self.pushButton_4.setText("Показать календарь")
 
     def show_group_dialog(self):
         dialog = GroupSelectionDialog(self.centralwidget.window())
