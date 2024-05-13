@@ -59,8 +59,6 @@ class Ui_MainWindow(object):
 
     def setupUi(self, MainWindow):
         screen_resolution = QCoreApplication.instance().desktop().screenGeometry()
-        screen_width = screen_resolution.width()
-        screen_height = screen_resolution.height()
 
         # Устанавливаем размер окна в 2/3 от разрешения монитора
         window_width = int(screen_resolution.width() * 2 / 3)
@@ -186,15 +184,15 @@ class Ui_MainWindow(object):
 
     def next_day(self):
         self.current_day = (self.current_day + 1) % 14
-        self.update_day_label()
         self.current_date = self.current_date.addDays(1)
+        self.update_day_label()
 
     def previous_day(self):
         self.current_day = self.current_day - 1
         if self.current_day == -1:
             self.current_day = 13
-        self.update_day_label()
         self.current_date = self.current_date.addDays(-1)
+        self.update_day_label()
 
     def curr_day(self):
         self.current_day, self.current_week = self.curr_day_const, self.curr_week_const
@@ -215,7 +213,7 @@ class Ui_MainWindow(object):
             self.current_week = 1
         else:
             self.current_week = 0
-        self.tableWidget.setHorizontalHeaderLabels([days_of_week[self.current_day % 7] + " | Неделя " + str(self.current_week + 1)])
+        self.tableWidget.setHorizontalHeaderLabels([self.current_date.toString("dd.MM.yyyy") + " | " + days_of_week[self.current_day % 7] + " | Неделя " + str(self.current_week + 1)])
 
         for row, (time, data) in enumerate(data_week_1.items()):
             text_item = QtWidgets.QTableWidgetItem(data)
