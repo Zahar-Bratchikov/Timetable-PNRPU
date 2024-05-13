@@ -1,5 +1,4 @@
 import os
-from calendar import Month
 from datetime import datetime
 
 import requests
