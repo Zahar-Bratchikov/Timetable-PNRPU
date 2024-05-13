@@ -13,7 +13,7 @@ def download_excel_schedule(Group, Year, Number_of_group, Level_education, Seaso
     # 1 - 7 prev-now
     # 8 - 12 now-next
 
-    if current_month in range(1, 8):
+    if current_month in [i for i in range(1, 8)]:
         year_semester = f"{current_year - 1}-{current_year}"
     else:
         year_semester = f"{current_year}-{current_year + 1}"
