@@ -1,11 +1,8 @@
 from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtWidgets import QCalendarWidget, QComboBox, QDialog, QLineEdit, QPushButton
-from PyQt5.QtCore import QCoreApplication, QRect
+from PyQt5.QtCore import QCoreApplication
 from timetable import Timetable
 from parser import download_excel_schedule
-import requests
-import os
 
 # Словари для перевода русских названий в английские эквиваленты
 GROUP_TRANSLATIONS = {
