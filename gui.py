@@ -5,27 +5,244 @@ from timetable import Timetable
 from parser import download_excel_schedule
 
 # Словари для перевода русских названий в английские эквиваленты
-GROUP_TRANSLATIONS = {
-    "БМ": "BM",
-    "ВМ": "VM",
-    "ДПМ": "DPM",
-    "ИВК": "IVK",
-    "ИСТ": "IST",
-    "ИТСИ": "ITSI",
-    "МАК": "MAK",
-    "МИЭ": "MIEH",
-    "ММ": "MM",
-    "МТВО": "MTVO",
-    "ПМ": "PM",
-    "ПМОН": "PMON",
-    "ФОП": "FOP",
-    "ХЕБИ": "KHEBI",
-    "ЦТУ": "CTU"
+
+'''
+Тут нужно доделать еще говно с переводом групп 100 ссылок прокликать
+'''
+
+FACULTY_TRANSLATION = {
+    "АКФ": "AKF",
+    "ВШАД": "VSHAD",
+    "ГНФ": "GNF",
+    "ГУМФ": "GUMF",
+    "МТФ": "MTF",
+    "СФ": "SF",
+    "ФПММ": "FPMM",
+    "ХТФ": "HTF",
+    "ЭТФ": "EHTF"
+}
+
+FACULTY_GROUP_TRANSLATION = {
+    "АКФ": {
+        "АД": "AD",
+        "ГГА": "GGA",
+        "ГМЛА": "GMLA",
+        "ГПА": "GPA",
+        "ГПУД": "GPUD",
+        "ГТУ": "GTU",
+        "ИРП": "IRP",
+        "КНМ": "KNM",
+        "КТПД": "KTPD",
+        "МТМ": "MTM",
+        "МТН": "MTN",
+        "ПИШ": "PISH",
+        "ПКМ": "PKM",
+        "ПКМ4": "PKM4",
+        "ППАМ": "PPAM",
+        "РД": "RD",
+        "РКВ": "RKV",
+        "РТЦБ": "RTSB",
+        "ТПМП": "TPMP",
+        "ТЦБП": "TCBP",
+        "ТЭКС": "TEHKS",
+        "ЭКМ": "EHKM"
+    },
+    "ВШАД": {
+        "ПИШ": "PISH"
+    },
+    "ГНФ": {
+        "БНГС": "BNGS",
+        "ГД": "GD",
+        "ГМ": "GM",
+        "ГМИС": "GMIS",
+        "ГМНГ": "GMNG",
+        "МД": "MD",
+        "МОН": "MON",
+        "НГД": "NGD",
+        "НГТ": "NGT",
+        "ОУОТ": "OUOT",
+        "ПГ": "PG",
+        "РМПИ": "RMPI",
+        "РНГМ": "RNGM",
+        "ТРИМ": "TRIM",
+        "УНГА": "UNGA",
+        "ФП": "FP",
+        "ФПГН": "FPGN",
+        "ЭАГП": "EAGP"
+    },
+    "ГУМФ": {
+        "ГМУ": "GMU",
+        "ДИС": "DIS",
+        "ЛП": "LP",
+        "МК": "MK",
+        "МН": "MN",
+        "МТИД": "MTID",
+        "ПИФ": "PIF",
+        "ПР": "PR",
+        "РКИ": "RKI",
+        "С": "S",
+        "СИО": "SIO",
+        "СМИ": "SMI",
+        "СО": "SO",
+        "СОИР": "SOIR",
+        "СОЦ": "SOC",
+        "УЧР": "UCHR",
+        "ФТЦЭ": "FTSE",
+        "ЦТМ": "CTM",
+        "ЦТФ": "CTF",
+        "ЦЭУП": "CEUP",
+        "Э": "E",
+        "ЭЛП": "ELP",
+        "ЭУПН": "EUPN"
+    },
+    "МТФ": {
+        "АТМ": "ATM",
+        "БПМ": "BPM",
+        "КОМП": "COMP",
+        "КПЛП": "KPLP",
+        "КТОМ": "KTOM",
+        "ЛТС": "LTS",
+        "МС": "MS",
+        "МТО": "MTO",
+        "МТОЭ": "MTOE",
+        "ОТП": "OTP",
+        "ПИШ": "PISH",
+        "СДМ": "SDM",
+        "ТЛП": "TLP",
+        "ТМИП": "TMIP",
+        "ТОК": "TOK",
+        "ТСП": "TSP",
+        "ТЦП": "TCP",
+        "УК": "UK",
+        "УПАС": "UPAS",
+        "ЦТМП": "CTMP",
+        "ЦТСР": "CTSR",
+        "ЭА": "EA",
+        "ЭАЭМ": "EAEM",
+        "ЭТБМ": "ETBM"
+    },
+    "СФ": {
+        "АСП": "ASP",
+        "ВВ": "VV",
+        "ГСХ": "GSKH",
+        "ИСВВ": "ISVV",
+        "ИСТВ": "ISTV",
+        "ИСТС": "ISTS",
+        "ИТМС": "ITMS",
+        "МАУС": "MAUS",
+        "ОМЭ": "OME",
+        "ПГС": "PGS",
+        "ПГС1": "PGS1",
+        "ПГС2": "PGS2",
+        "ПГС3": "PGS3",
+        "ПГСА": "PGSA",
+        "ПГСК": "PGSK",
+        "ПГСТ": "PGST",
+        "ПСК": "PSK",
+        "ПСК1": "PSK1",
+        "ПСК3": "PSK3",
+        "ПСК4": "PSK4",
+        "ПСК5": "PSK5",
+        "САД": "SAD",
+        "СВС": "SVS",
+        "СКЗС": "SKZS",
+        "СПС": "SPS",
+        "СТ": "ST",
+        "СУЗС": "SUZS",
+        "ТБТ": "TBT",
+        "ТВ": "TV",
+        "ТСНК": "TSNK",
+        "ЦА": "CA",
+        "ЭУН": "EUN",
+        "ЭУН1": "EUN1",
+        "ЭУН2": "EUN2",
+        "ЭУН3": "EUN3",
+        "ЭУН6": "EUN6",
+        "ЭУН8": "EUN8"
+    },
+    "ФПММ": {
+        "БМ": "BM",
+        "ВМ": "VM",
+        "ДПМ": "DPM",
+        "ИВК": "IVK",
+        "ИСТ": "IST",
+        "ИТСИ": "ITSI",
+        "МАК": "MAK",
+        "МИЭ": "MIEH",
+        "ММ": "MM",
+        "МТВО": "MTVO",
+        "ПМ": "PM",
+        "ПМОН": "PMON",
+        "ФОП": "FOP",
+        "ХЕБИ": "KHEBI",
+        "ЦТУ": "CTU"
+    },
+    "ХТФ": {
+        "АТП": "ATP",
+        "БТ": "BT",
+        "БТ5": "BT5",
+        "ЗОС": "ZOS",
+        "МАХП": "MAHP",
+        "ОНГП": "ONGP",
+        "ООСБ": "OOSB",
+        "ООСВ": "OOSV",
+        "ООСУ": "OOSU",
+        "РТЦБ": "RTSB",
+        "САУ": "SAU",
+        "САУТ": "SAUT",
+        "ТБ": "TB",
+        "ТБАВ": "TBAV",
+        "ТНВ": "TNV",
+        "ТТУМ": "TTUM",
+        "ТЦБП": "TCBP",
+        "ХТ": "HT",
+        "ЭСУ": "ESU",
+        "ЭУРТ": "EURT"
+    },
+    "ЭТФ": {
+        "АСР": "ASR",
+        "АСУ": "ASU",
+        "АСУ2": "ASU2",
+        "АСУ4": "ASU4",
+        "АСУ5": "ASU5",
+        "АСУ6": "ASU6",
+        "АСУ8": "ASU8",
+        "АСУ9": "ASU9",
+        "АТ": "AT",
+        "АТ1": "AT1",
+        "АТПП": "ATPP",
+        "АЭП": "AEP",
+        "АЭЭ": "AEE",
+        "БИС": "BIS",
+        "ИВТ": "IVT",
+        "ИПР": "IPR",
+        "ИСУП": "ISUP",
+        "КЗИ": "KZI",
+        "КОБ": "KOB",
+        "КПИ": "KPI",
+        "КС": "KS",
+        "КТЭ": "KTE",
+        "МИР": "MIR",
+        "НЭПР": "NEPR",
+        "ПРТ": "PRT",
+        "РАПР": "RAPR",
+        "РИС": "RIS",
+        "СРРС": "SRRS",
+        "СТАР": "STAR",
+        "ТК": "TK",
+        "ТК6": "TK6",
+        "ЦЭКП": "CEKP",
+        "ЭМ": "EM",
+        "ЭС": "ES",
+        "ЭЭ": "EE"
+    }
 }
 
 EDUCATION_LEVEL_TRANSLATIONS = {
     "Бакалавриат": "b",
     "Магистратура": "m",
+    "Специалитет": "s",
+    # Блять, в некоторых факультетах магистр это ->моз<- СУКА БЛЯТЬ
 }
 
 SEMESTER_TRANSLATIONS = {
@@ -56,6 +273,8 @@ class Ui_MainWindow(object):
 
     def setupUi(self, MainWindow):
         screen_resolution = QCoreApplication.instance().desktop().screenGeometry()
+        screen_width = screen_resolution.width()
+        screen_height = screen_resolution.height()
 
         # Устанавливаем размер окна в 2/3 от разрешения монитора
         window_width = int(screen_resolution.width() * 2 / 3)
@@ -80,34 +299,36 @@ class Ui_MainWindow(object):
         self.tableWidget.setSizePolicy(QtWidgets.QSizePolicy.Expanding,
                                        QtWidgets.QSizePolicy.Expanding)  # Политика изменения размеров
 
-        self.gridLayout.addWidget(self.tableWidget, 2, 0, 1, 2)
+        self.gridLayout.addWidget(self.tableWidget, 3, 0, 1, 2)
 
         # Кнопки и строка ввода
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton.setObjectName("pushButton")
-        self.gridLayout.addWidget(self.pushButton, 3, 1, 1, 1)
+        self.gridLayout.addWidget(self.pushButton, 4, 1, 1, 1)
         self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_2.setObjectName("pushButton_2")
-        self.gridLayout.addWidget(self.pushButton_2, 3, 0, 1, 1)
+        self.gridLayout.addWidget(self.pushButton_2, 4, 0, 1, 1)
         self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_3.setObjectName("pushButton_3")
         self.gridLayout.addWidget(self.pushButton_3, 0, 0, 1, 1)
         self.pushButton_4 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_4.setObjectName("pushButton_4")
         self.gridLayout.addWidget(self.pushButton_4, 0, 1, 1, 1)
+        self.lineEdit = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineEdit.setObjectName("lineEdit")
+        self.lineEdit.setAlignment(QtCore.Qt.AlignCenter)
+        self.lineEdit.setReadOnly(True)  # Делаем строку ввода только для чтения
+        self.gridLayout.addWidget(self.lineEdit, 2, 0, 1, 2)
         self.lineEdit_2 = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit_2.setObjectName("lineEdit_2")
+        self.lineEdit_2.setObjectName("lineEdit")
         self.lineEdit_2.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEdit_2.setReadOnly(True)  # Делаем строку ввода только для чтения
         self.gridLayout.addWidget(self.lineEdit_2, 1, 0, 1, 1)
         self.lineEdit_3 = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit_3.setObjectName("lineEdit_3")
+        self.lineEdit_3.setObjectName("lineEdit")
         self.lineEdit_3.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEdit_3.setReadOnly(True)  # Делаем строку ввода только для чтения
         self.gridLayout.addWidget(self.lineEdit_3, 1, 1, 1, 1)
-        self.pushButton_5 = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_5.setObjectName("pushButton_3")
-        self.gridLayout.addWidget(self.pushButton_5, 4, 0, 1, 2)
         self.calendarWidget = QCalendarWidget(self.centralwidget)
         self.calendarWidget.setObjectName("calendarWidget")
         self.calendarWidget.hide()  # Скрываем календарь при инициализации
@@ -135,7 +356,6 @@ class Ui_MainWindow(object):
 
         self.pushButton.clicked.connect(self.next_day)
         self.pushButton_2.clicked.connect(self.previous_day)
-        self.pushButton_5.clicked.connect(self.curr_day)
         self.calendar = False
         self.pushButton_4.clicked.connect(self.show_calendar)
         self.pushButton_3.clicked.connect(self.show_group_dialog)
@@ -148,11 +368,10 @@ class Ui_MainWindow(object):
         self.pushButton_2.setText(_translate("MainWindow", "Предыдущий день"))
         self.pushButton_3.setText(_translate("MainWindow", "Выбрать группу"))
         self.pushButton_4.setText(_translate("MainWindow", "Показать календарь"))
-        self.pushButton_5.setText(_translate("MainWindow", "Текущий день"))
+
     def fill_table_data(self, timetable):
         self.current_day = timetable.get_timetable()[1]
         self.current_week = self.current_day // 7
-        self.curr_day_const, self.curr_week_const = self.current_day, self.current_week
         self.lineEdit_2.setText(timetable.get_timetable()[2].replace(" ", ""))
         self.lineEdit_3.setText(timetable.get_timetable()[3])
         if self.current_week == 0:
@@ -181,23 +400,19 @@ class Ui_MainWindow(object):
 
     def next_day(self):
         self.current_day = (self.current_day + 1) % 14
-        self.current_date = self.current_date.addDays(1)
         self.update_day_label()
+        self.current_date = self.current_date.addDays(1)
 
     def previous_day(self):
         self.current_day = self.current_day - 1
         if self.current_day == -1:
             self.current_day = 13
+        self.update_day_label()
         self.current_date = self.current_date.addDays(-1)
-        self.update_day_label()
-
-    def curr_day(self):
-        self.current_day, self.current_week = self.curr_day_const, self.curr_week_const
-        self.current_date = QtCore.QDate.currentDate()
-        self.update_day_label()
 
     def update_day_label(self):
         days_of_week = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"]
+        self.lineEdit.setText(days_of_week[self.current_day % 7])
         data_week_1 = {
             "8:00": self.timetable_arr[0 + self.current_day * 6],
             "9:40": self.timetable_arr[1 + self.current_day * 6],
@@ -210,7 +425,10 @@ class Ui_MainWindow(object):
             self.current_week = 1
         else:
             self.current_week = 0
-        self.tableWidget.setHorizontalHeaderLabels([self.current_date.toString("dd.MM.yyyy") + " | " + days_of_week[self.current_day % 7] + " | Неделя " + str(self.current_week + 1)])
+        if self.current_week == 0:
+            self.tableWidget.setHorizontalHeaderLabels(["Первая неделя"])
+        else:
+            self.tableWidget.setHorizontalHeaderLabels(["Вторая неделя"])
 
         for row, (time, data) in enumerate(data_week_1.items()):
             text_item = QtWidgets.QTableWidgetItem(data)
@@ -231,8 +449,8 @@ class Ui_MainWindow(object):
         if dialog.exec_():
             group_data = dialog.get_group_data()
             if group_data:
-                Group, Year, Number_of_group, Level_education, Season, time = group_data
-                filename = download_excel_schedule(Group, Year, Number_of_group, Level_education, Season, time)
+                Faculty, Group, Year, Number_of_group, Level_education, Season, time = group_data
+                filename = download_excel_schedule(Faculty, Group, Year, Number_of_group, Level_education, Season, time)
                 if filename:
                     timetable = Timetable(filename, 'Лист1')
                     self.fill_table_data(timetable)
@@ -251,9 +469,12 @@ class GroupSelectionDialog(QDialog):
         self.setWindowTitle("Выбор группы")
         self.layout = QtWidgets.QVBoxLayout(self)
 
-        # Добавление выпадающего списка с группами
+        self.faculty_combo = QComboBox(self)
+        self.faculty_combo.addItems(FACULTY_TRANSLATION.keys())
+        self.faculty_combo.currentIndexChanged.connect(self.update_group_combo)
+        self.layout.addWidget(self.faculty_combo)
+
         self.group_combo = QComboBox(self)
-        self.group_combo.addItems(GROUP_TRANSLATIONS.keys())
         self.layout.addWidget(self.group_combo)
 
         # Добавление элементов для ввода дополнительной информации
@@ -281,9 +502,21 @@ class GroupSelectionDialog(QDialog):
         self.ok_button.clicked.connect(self.accept)
         self.layout.addWidget(self.ok_button)
 
+        # Обновление списка групп при инициализации окна
+        self.update_group_combo()
+
+    def update_group_combo(self):
+        selected_faculty = self.faculty_combo.currentText()
+        if selected_faculty:
+            groups = FACULTY_GROUP_TRANSLATION.get(selected_faculty, {}).keys()
+            self.group_combo.clear()
+            self.group_combo.addItems(groups)
+
     def get_group_data(self):
+        russion_faculty = self.faculty_combo.currentText()
+        english_faculty = FACULTY_TRANSLATION.get(russion_faculty)
         russian_group = self.group_combo.currentText()
-        english_group = GROUP_TRANSLATIONS.get(russian_group)
+        english_group = FACULTY_GROUP_TRANSLATION.get(russion_faculty, {}).get(russian_group)
         year = self.year_line_edit.text()
         number = self.number_line_edit.text()
         russian_level = self.level_combo.currentText()
@@ -292,8 +525,8 @@ class GroupSelectionDialog(QDialog):
         english_semester = SEMESTER_TRANSLATIONS.get(russian_semester)
         russian_period = self.period_combo.currentText()
         english_period = PERIOD_TRANSLATIONS.get(russian_period)
-
-        if year and number and english_group and english_level and english_semester and english_period:
-            return english_group, year, number, english_level, english_semester, english_period
+        if (english_faculty and english_group and year and number
+                and english_level and english_semester and english_period):
+            return english_faculty, english_group, year, number, english_level, english_semester, english_period
         else:
             return None
