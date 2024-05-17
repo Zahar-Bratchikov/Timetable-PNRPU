@@ -234,21 +234,14 @@ FACULTY_GROUP_TRANSLATION = {
     }
 }
 
-
-'''
-Блять, в некоторых факультетах магистр это ->моз<- СУКА БЛЯТЬ
-Бозу какой-то блять еще -> бакалавр
-Боз -> бакалавр
-'''
-
 EDUCATION_LEVEL_TRANSLATIONS = {
     "Бакалавриат (б)": "b",
     "Бакалавриат (бозу)": "bozu",
     "Бакалавриат (боз)": "boz",
-    "Специалитет": "s",
     "Магистратура (м)": "m",
     "Магистратура (моз)": "moz",
-
+    "Специалитет (с)": "s",
+    "Специалитет (соз)": "soz"
 }
 
 SEMESTER_TRANSLATIONS = {
@@ -458,8 +451,8 @@ class Ui_MainWindow(object):
                 filename = download_excel_schedule(Faculty, Group, Year, Number_of_group, Level_education, Season, time)
                 if filename:
                     timetable = Timetable(filename, 'Лист1')
-                    self.fill_table_data(timetable)
                     self.current_date = QtCore.QDate.currentDate()
+                    self.fill_table_data(timetable)
 
     def on_date_selected(self):
         selected_date = self.calendarWidget.selectedDate()
