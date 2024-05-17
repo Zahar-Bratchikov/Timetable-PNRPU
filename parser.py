@@ -24,8 +24,9 @@ def download_excel_schedule(Faculty, Group, Year, Number_of_group, Level_educati
             f"{Year}-{Number_of_group}{Level_education}%20%28{Season}%20%20{time}%20smeny%29.xlsx")
     url3 = (f"{base_url}{year_semester}%20Raspisanie%20zanyatijj%20{Faculty}%20{Group}-"
             f"{Year}-{Number_of_group}{Level_education}%20%28{Season}%20%20{time}%20smeny%29.xlsx")
+    url4 = (f"{base_url}{year_semester}%20Raspisanie%20zanyatijj%20{Faculty}%20{Group}%20%20%20-"
+           f"{Year}-{Number_of_group}{Level_education}%20%28{Season}%20%20{time}%20smeny%29.xlsx")
 
-    print(url)
     # Отправить GET-запрос для загрузки файла
     response = requests.get(url)
 
@@ -61,5 +62,16 @@ def download_excel_schedule(Faculty, Group, Year, Number_of_group, Level_educati
                     f.write(response.content)
                 return filepath
             else:
-                QMessageBox.critical(None, "Ошибка", "Не удалось загрузить файл.", QMessageBox.Ok)
-                return None
+                response = requests.get(url4)
+                if response.status_code == 200:
+                    # Определить путь для сохранения файла
+                    filename = f"timetable.xlsx"
+                    filepath = os.path.join(os.getcwd(), filename)
+
+                    # Записать содержимое файла
+                    with open(filepath, "wb") as f:
+                        f.write(response.content)
+                    return filepath
+                else:
+                    QMessageBox.critical(None, "Ошибка", "Не удалось загрузить файл.", QMessageBox.Ok)
+                    return None
