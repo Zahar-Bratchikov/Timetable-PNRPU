@@ -3,7 +3,6 @@ from PyQt5.QtWidgets import QCalendarWidget, QComboBox, QDialog, QLineEdit, QPus
 from PyQt5.QtCore import QCoreApplication
 from timetable import Timetable
 from parser import download_excel_schedule
-
 from translations import (
     FACULTY_TRANSLATION,
     FACULTY_GROUP_TRANSLATION,
