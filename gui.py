@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QCalendarWidget, QComboBox, QDialog, QLineEdit, QPus
 from PyQt5.QtCore import QCoreApplication
 from timetable import Timetable
 from parser import download_excel_schedule
+
 from translations import (
     FACULTY_TRANSLATION,
     FACULTY_GROUP_TRANSLATION,
@@ -19,7 +20,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.setupUi(self)
         self.setWindowTitle("Расписание ПНИПУ")
 
-        self.timetable = Timetable('timetable.xlsx', 'Лист1')
+        self.timetable = Timetable()
         self.ui.fill_table_data(self.timetable)
 
 
@@ -209,7 +210,7 @@ class Ui_MainWindow(object):
                 Faculty, Group, Year, Number_of_group, Level_education, Season, time = group_data
                 filename = download_excel_schedule(Faculty, Group, Year, Number_of_group, Level_education, Season, time)
                 if filename:
-                    timetable = Timetable(filename, 'Лист1')
+                    timetable = Timetable()
                     self.current_date = QtCore.QDate.currentDate()
                     self.fill_table_data(timetable)
 
