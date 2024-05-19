@@ -1,18 +1,21 @@
 from openpyxl.utils import range_boundaries
 from openpyxl import load_workbook
 from datetime import datetime
-from PyQt5 import QtCore, QtWidgets
+import os
 
 
 class Timetable:
-    def __init__(self, filename, sheet_name):
-        self.wb = load_workbook(filename)
-        self.ws = self.wb[sheet_name]
-        self.months = {
-            'января': 1, 'февраля': 2, 'марта': 3, 'апреля': 4,
-            'мая': 5, 'июня': 6, 'июля': 7, 'августа': 8,
-            'сентября': 9, 'октября': 10, 'ноября': 11, 'декабря': 12
-        }
+    def __init__(self):
+        filename = 'timetable.xlsx'
+        sheet_name = 'Лист1'
+        if os.path.exists("timetable.xlsx"):
+            self.wb = load_workbook(filename)
+            self.ws = self.wb[sheet_name]
+            self.months = {
+                'января': 1, 'февраля': 2, 'марта': 3, 'апреля': 4,
+                'мая': 5, 'июня': 6, 'июля': 7, 'августа': 8,
+                'сентября': 9, 'октября': 10, 'ноября': 11, 'декабря': 12
+            }
 
     def extract_date_and_week(self, message):
         parts = message.split()
@@ -42,58 +45,36 @@ class Timetable:
         return False
 
     def get_timetable(self):
-        start_date, current_week = self.extract_date_and_week(self.ws['a2'].value)
-        now = datetime.now()
-        tt_arr = []
-        for k in range(0, 2):
-            week = k
-            for i in range(4, 76):
-                if (self.are_cells_merged('c' + str(i - 1), 'c' + str(i)) and name.value is not None):
-                    continue
-                name = self.ws['c' + str(i)]
-                if (i % 2 == week and name.value is not None):
-                    tt_arr.append(name.value)
-                elif (self.are_cells_merged('c' + str(i), 'c' + str(i + 1)) and name.value is not None):
-                    tt_arr.append(name.value)
-                elif (i % 2 == week):
+        if os.path.exists("timetable.xlsx"):
+            start_date, current_week = self.extract_date_and_week(self.ws['a2'].value)
+            now = datetime.now()
+            tt_arr = []
+            for k in range(0, 2):
+                week = k
+                for i in range(4, 76):
+                    if (self.are_cells_merged('c' + str(i - 1), 'c' + str(i)) and name.value is not None):
+                        continue
+                    name = self.ws['c' + str(i)]
+                    if (i % 2 == week and name.value is not None):
+                        tt_arr.append(name.value)
+                    elif (self.are_cells_merged('c' + str(i), 'c' + str(i + 1)) and name.value is not None):
+                        tt_arr.append(name.value)
+                    elif (i % 2 == week):
+                        tt_arr.append("---")
+                for i in range(0, 6):
                     tt_arr.append("---")
-            for i in range(0, 6):
-                tt_arr.append("---")
-
-
-        return tt_arr, now.weekday() + ((self.weeks_since(start_date, current_week) + 1) % 2) * 7, self.ws['c3'].value, self.ws['a1'].value
-
-    def fill_table_data(self, timetable):
-        self.current_day = timetable.get_timetable()[2]  # Изменил индекс для получения текущего дня
-        self.current_week = timetable.get_timetable()[1]  # Изменил индекс для получения текущей недели
-
-        if self.current_week == 0:
-            self.tableWidget.setHorizontalHeaderLabels(["Первая неделя"])
+                a1 = self.ws['a1'].value
+                c3 = self.ws['c3'].value
         else:
-            self.tableWidget.setHorizontalHeaderLabels(["Вторая неделя"])
+            start_date = datetime(1970, 1, 1)
+            current_week = 1
+            now = datetime.now()
+            tt_arr = []
+            for k in range(0, 2):
+                for i in range(4, 82):
+                    tt_arr.append("---")
+            a1 = "-"
+            c3 = "-"
 
-        # Получаем данные из расписания
-        self.timetable_arr, week, current_day = timetable.get_timetable()
 
-        # Заполняем вертикальные заголовки
-        self.tableWidget.setVerticalHeaderLabels(["8:00", "9:40", "11:30", "13:20", "15:00", "16:40"])
-
-        # Обновляем таблицу данными расписания
-        for row in range(6):
-            for col in range(1):  # Изменил на range(1)
-                index = row + col * 6
-                text = self.timetable_arr[index]
-                item = QtWidgets.QTableWidgetItem(text)
-                item.setTextAlignment(QtCore.Qt.AlignCenter)
-                self.tableWidget.setItem(row, col, item)
-
-        # Обновляем метку дня
-        days_of_week = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"]
-        self.lineEdit.setText(days_of_week[current_day])
-
-        # Изменяем высоту строк таблицы
-        table_height = self.tableWidget.height()
-        row_count = self.tableWidget.rowCount()
-        row_height = int(table_height / row_count - 5)
-        for row in range(row_count):
-            self.tableWidget.setRowHeight(row, row_height)
+        return tt_arr, now.weekday() + ((self.weeks_since(start_date, current_week) + 1) % 2) * 7, c3, a1
