@@ -66,7 +66,7 @@ class Timetable:
                 a1 = self.ws['a1'].value
                 c3 = self.ws['c3'].value
         else:
-            start_date = datetime(1970, 1, 1)
+            start_date = datetime(datetime.now().year, 1, 1)
             current_week = 1
             now = datetime.now()
             tt_arr = []
