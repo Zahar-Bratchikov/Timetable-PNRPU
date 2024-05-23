@@ -6,7 +6,7 @@ FACULTY_TRANSLATION = {
     "МТФ": "MTF",
     "СФ": "SF",
     "ФПММ": "FPMM",
-    "ХТФ": "HTF",
+    "ХТФ": "KHTF",
     "ЭТФ": "EHTF"
 }
 
@@ -183,7 +183,7 @@ FACULTY_GROUP_TRANSLATION = {
         "ТНВ": "TNV",
         "ТТУМ": "TTUM",
         "ТЦБП": "TCBP",
-        "ХТ": "HT",
+        "ХТ": "KHT",
         "ЭСУ": "EHSU",
         "ЭУРТ": "EHURT"
     },
